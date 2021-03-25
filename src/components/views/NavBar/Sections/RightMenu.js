@@ -4,22 +4,39 @@ import { Menu , Icon, Badge} from 'antd';
 import axios from 'axios';
 import { USER_SERVER } from '../../../Config';
 import { withRouter } from 'react-router-dom';
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { signOut } from '../../../../_actions/auth_actions';
 
 function RightMenu(props) {
   const auth = useSelector(state => state.auth)
+  const dispatch = useDispatch();
+
 
   const logoutHandler = () => {
-    axios.get(`${USER_SERVER}/logout`).then(response => {
+
+    console.log("RightMenu param check start")
+    console.log(JSON.stringify(auth.authToken))
+    console.log("RightMenu param check end")
+
+
+    dispatch(signOut(JSON.stringify(auth.authToken)))
+    .then(response => {
       if (response.status === 200) {
-        props.history.push("/signin");
+        props.history.push("/");
+        alert('Log Out Success')
       } else {
         alert('Log Out Failed')
       }
     });
   };
 
-  if (auth.userData && !auth.authToken) {
+  // console.log("RightMenu param check start")
+  // console.log(auth)
+  // console.log(JSON.stringify(auth))
+  // console.log(auth.userData)
+  // console.log(auth.authToken)
+  // console.log("RightMenu param check end")
+  if (!auth.userData && !auth.authToken) {
     return (
       <Menu mode={props.mode}>
         <Menu.Item key="mail">
