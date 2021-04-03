@@ -3,7 +3,9 @@ import { Route, Switch } from "react-router-dom";
 import NavBar from "./views/NavBar/NavBar.js";
 import MainPage from "./views/MainPage/MainPage.js";
 import SignUpPage from "./views/SignUpPage/SignUpPage.js";
-import SignInPage from "./views/SignInPage/SignInPage.js"
+import SignInPage from "./views/SignInPage/SignInPage.js";
+import AddItemPage from "./views/Admin/Item/AddItemPage/AddItemPage.js";
+
 
 function App() {
   return (
@@ -14,6 +16,7 @@ function App() {
         <Route exact path="/" component={MainPage} />
         <Route exact path="/signup" component={SignUpPage} />
         <Route exact path="/signin" component={SignInPage} />
+        <Route exact path="/product/add" component={AddItemPage} />
       </Switch>
       </div>
     </Suspense>

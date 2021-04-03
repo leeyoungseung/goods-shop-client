@@ -45,7 +45,7 @@ export default function SignInPage(props) {
             dispatch(signIn(dataToSubmit))
               .then(response => {
                 console.log(response.payload)
-                alert(JSON.stringify(response.payload))
+                //alert(JSON.stringify(response.payload))
 
                 if (response.payload.data.authorization) {
                   window.localStorage.setItem('authorization', response.payload.data.authorization);
@@ -57,7 +57,7 @@ export default function SignInPage(props) {
 
                   dispatch(getUser(response.payload.data.authorization))
                     .then(response => {
-                      alert(JSON.stringify(response.payload))
+                      //alert(JSON.stringify(response.payload))
                     });
 
                   props.history.push("/");

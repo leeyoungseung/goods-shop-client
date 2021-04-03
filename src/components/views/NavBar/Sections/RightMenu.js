@@ -3,9 +3,12 @@ import React from 'react';
 import { Menu , Icon, Badge} from 'antd';
 import axios from 'axios';
 import { USER_SERVER } from '../../../Config';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
 import { signOut } from '../../../../_actions/auth_actions';
+
+const SubMenu = Menu.SubMenu;
+const MenuItemGroup = Menu.ItemGroup;
 
 function RightMenu(props) {
   const auth = useSelector(state => state.auth)
@@ -53,10 +56,15 @@ function RightMenu(props) {
         <Menu.Item key="history">
           <a href="/history" >History</a>
         </Menu.Item>
-        <Menu.Item key="upload">
-          <a href="/product/upload" >upload</a>
+        <Menu.Item key="add">
+          <a href="/product/add" >upload</a>
         </Menu.Item>
+        <SubMenu title={<span>For Manage</span>}>
+          <MenuItemGroup title={<span><a href="/">Item Manage</a></span>}>
+            <Menu.Item key="product:add"><Link key="/product/add" to="/product/add">Add Item</Link></Menu.Item>
 
+          </MenuItemGroup>
+        </SubMenu>
         {/* <Menu.Item key="cart" style={{ paddingBottom: 3}}>
           <Badge count={auth.userData && auth.userData.cart.length}>
           <a href="/user/cart" className="head-example" style={{ marginRight: -22, color:'#667777'}}>
