@@ -1,31 +1,24 @@
 import React, {useState} from 'react'
-import { Button, Form, Input, Radio} from 'antd';
+import { Button, Form, Input} from 'antd';
 import FileUpload from '../../../../utils/FileUpload.js';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
+import { USER_SERVER } from '../../../../../components/Config.js';
+import { MakerCodes , SaleStatusList} from '../Data.js'
+import RadioBox from '../Sections/RadioBox.js'
+import { useSelector } from "react-redux";
 
 const { TextArea} = Input;
-const FormItem = Form.Item;
-
-const MakerCodes = [
-    { key: 1, value: "Self-production"},
-    { key: 2, value: "Maker-1"},
-    { key: 3, value: "Maker-2"}
-]
 
 function AddItemPage(props) {
-
-    const radioStyle = {
-        display: 'block',
-        height: '30px',
-        lineHeight: '30px',
-    };
 
     const [ItemName, setItemName] = useState("");
     const [ItemDescription, setItemDescription] = useState("");
     const [Price, setPrice] = useState(0);
     const [MakerCode, setMakerCode] = useState(1);
     const [Images, setImages] = useState([]);
+    const [SaleStatus, setSaleStatus] = useState(0);
+    const CreateUser = useSelector(state => state.auth.userData.email);
 
     const itemNameChangeHandler = (event) => {
         setItemName(event.currentTarget.value)
@@ -47,10 +40,15 @@ function AddItemPage(props) {
         setImages(newImages)
     }
 
+    const saleStatusChangeHandler = (status) => {
+        console.log("saleStatusChangeHandler : " + status)
+        setSaleStatus(status)
+    }
+
     const submitHandler = (event) => {
         event.preventDefault();
 
-        if (!ItemName || !ItemDescription || !Price || !MakerCode || !Images) {
+        if (!ItemName || !ItemDescription || !Price || !MakerCode || !Images || !SaleStatus || !CreateUser) {
             return alert("Please Input all value.")
         }
 
@@ -59,17 +57,20 @@ function AddItemPage(props) {
             itemDescription: ItemDescription,
             price: Price,
             makerCode: MakerCode,
-            images: Images
-            
+            images: Images,
+            saleStatus: SaleStatus,
+            createUser: CreateUser
         }
 
-        axios.post("/api/product", body)
+        console.log("Request body : "+JSON.stringify(body));
+
+        axios.post(`${USER_SERVER}/api/v1/items`, body)
             .then(response => {
-                if (response.data.success) {
-                    alert("Success upload Product info.")
+                console.log(JSON.stringify(response.data))
+                if (response.data.message === "Success") {
                     props.history.push('/')
                 } else {
-                    alert("Fail upload Product info")
+                    alert("Fail Add Item info")
                 }
             })
 
@@ -94,19 +95,25 @@ function AddItemPage(props) {
                 <br />
                 <br />
                 <label>Item Description</label>
-                <TextArea onChange={itemDescriptionChangeHandler} value={ItemDescription}/>
+                <TextArea rows={4} onChange={itemDescriptionChangeHandler} value={ItemDescription}/>
                 <br />
                 <br />
                 <label>Price ($)</label>
                 <Input type="number" onChange={priceChangeHandler} value={Price}/>
                 <br />
                 <br />
+
                 <label>Maker : </label>
                 <select onChange={makerCodeChangeHandler}>
                     {MakerCodes.map(item => (
                         <option key={item.key} value={item.key}>{item.value}</option>
                     ))}
                 </select>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label>SaleStatus : </label>
+                <RadioBox list={SaleStatusList}
+                        selectValue={saleStatusChangeHandler}
+                    />
                 <br />
                 <br />
 

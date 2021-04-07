@@ -20,7 +20,7 @@ function FileUpload(props) {
                 "Authorization": Token
              }
         }
-        formData.append("files", files[0])
+        formData.append("file", files[0])
 
         axios.post(`${USER_SERVER}/api/v1/items/upload-image`, formData, config)
         .then(response => {
